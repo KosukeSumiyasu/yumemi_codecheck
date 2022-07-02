@@ -22,7 +22,6 @@ class RepositoryTableViewController: UITableViewController {
     //MARK: ViewCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         searchBar.text = "GitHubのリポジトリを検索できるよー"
         searchBar.delegate = self
     }
@@ -39,7 +38,6 @@ class RepositoryTableViewController: UITableViewController {
 //MARK: UISearchBarDeleagate
 extension RepositoryTableViewController: UISearchBarDelegate {
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        // ↓こうすれば初期のテキストを消せる
         searchBar.text = ""
         return true
     }
@@ -49,7 +47,6 @@ extension RepositoryTableViewController: UISearchBarDelegate {
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-
         word = searchBar.text!
         if word.count != 0 {
             url = "https://api.github.com/search/repositories?q=\(word!)"
@@ -75,7 +72,6 @@ extension RepositoryTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         let cell = UITableViewCell()
         let repositories = repositories[indexPath.row]
         cell.textLabel?.text = repositories["full_name"] as? String ?? ""
@@ -85,7 +81,6 @@ extension RepositoryTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
         index = indexPath.row
         performSegue(withIdentifier: "Detail", sender: self)
     }

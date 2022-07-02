@@ -24,7 +24,6 @@ class RepositoryDetailViewController: UIViewController {
     //MARK: ViewCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
         let repositories = vc1.repositories[vc1.index]
         languageLabel.text = "Written in \(repositories["language"] as? String ?? "")"
         starsLabel.text = "\(repositories["stargazers_count"] as? Int ?? 0) stars"
@@ -41,7 +40,6 @@ extension RepositoryDetailViewController {
     private func getImage(){
         let repositories = vc1.repositories[vc1.index]
         titleLabel.text = repositories["full_name"] as? String
-
         if let owner = repositories["owner"] as? [String: Any] {
             if let imageURL = owner["avatar_url"] as? String {
                 URLSession.shared.dataTask(with: URL(string: imageURL)!) { (data, response, error) in
