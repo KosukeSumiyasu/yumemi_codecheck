@@ -15,9 +15,7 @@ class RepositoryTableViewController: UITableViewController {
 
     var repositories: [Repository]=[]
     var task: URLSessionTask?
-    var word: String!
-    var url: String!
-    var index: Int!
+    var index: Int = 0
 
     //MARK: ViewCycle
     override func viewDidLoad() {
@@ -27,7 +25,7 @@ class RepositoryTableViewController: UITableViewController {
 
     //MARK: Next Source
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Detail"{
+        if segue.identifier == "Detail" {
             let destination = segue.destination as! RepositoryDetailViewController
             destination.vc1 = self
         }
@@ -41,11 +39,11 @@ extension RepositoryTableViewController: UISearchBarDelegate {
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        word = searchBar.text!
+        guard let word = searchBar.text else { return }
         if word.count != 0 {
-            url = "https://api.github.com/search/repositories?q=\(word!)"
-            task = URLSession.shared.dataTask(with: URL(string: url)!) { (data, res, err) in
-                guard let data = data else { return }
+            guard let url = URL(string: "https://api.github.com/search/repositories?q=\(word)") else { return }
+            task = URLSession.shared.dataTask(with: url) { (data, res, err) in
+                guard let data = data, err == nil else { return }
                 if let obj = try? JSONDecoder().decode(RepositoryList.self, from: data) {
                     self.repositories = obj.items
                     DispatchQueue.main.async {

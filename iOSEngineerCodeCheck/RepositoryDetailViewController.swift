@@ -31,7 +31,6 @@ class RepositoryDetailViewController: UIViewController {
         forksLabel.text = repositories.forksCount.description
         issuesLabel.text = repositories.issuesCount.description
         getImage()
-
     }
 }
 
@@ -41,9 +40,10 @@ extension RepositoryDetailViewController {
         let repositories = vc1.repositories[vc1.index]
         titleLabel.text = repositories.fullName
         let owner = repositories.owner
-        let imageURL = owner.imageUrl
-        URLSession.shared.dataTask(with: URL(string: imageURL)!) { (data, response, error) in
-            let image = UIImage(data: data!)!
+        guard let imageURL = URL(string: owner.imageUrl) else { return }
+        URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
+            guard let data = data else { return }
+            let image = UIImage(data: data)
             DispatchQueue.main.async {
                 self.imageView.image = image
             }
