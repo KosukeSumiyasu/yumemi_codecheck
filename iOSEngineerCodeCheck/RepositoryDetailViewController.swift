@@ -25,11 +25,11 @@ class RepositoryDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let repositories = vc1.repositories[vc1.index]
-        languageLabel.text = "Written in \(repositories["language"] as? String ?? "")"
-        starsLabel.text = "\(repositories["stargazers_count"] as? Int ?? 0) stars"
-        watchersLabel.text = "\(repositories["wachers_count"] as? Int ?? 0) watchers"
-        forksLabel.text = "\(repositories["forks_count"] as? Int ?? 0) forks"
-        issuesLabel.text = "\(repositories["open_issues_count"] as? Int ?? 0) open issues"
+        languageLabel.text = repositories.language
+        starsLabel.text = repositories.starsCount.description
+        watchersLabel.text = repositories.watchersCount.description
+        forksLabel.text = repositories.forksCount.description
+        issuesLabel.text = repositories.issuesCount.description
         getImage()
 
     }
@@ -39,16 +39,14 @@ class RepositoryDetailViewController: UIViewController {
 extension RepositoryDetailViewController {
     private func getImage(){
         let repositories = vc1.repositories[vc1.index]
-        titleLabel.text = repositories["full_name"] as? String
-        if let owner = repositories["owner"] as? [String: Any] {
-            if let imageURL = owner["avatar_url"] as? String {
-                URLSession.shared.dataTask(with: URL(string: imageURL)!) { (data, response, error) in
-                    let image = UIImage(data: data!)!
-                    DispatchQueue.main.async {
-                        self.imageView.image = image
-                    }
-                }.resume()
+        titleLabel.text = repositories.fullName
+        let owner = repositories.owner
+        let imageURL = owner.imageUrl
+        URLSession.shared.dataTask(with: URL(string: imageURL)!) { (data, response, error) in
+            let image = UIImage(data: data!)!
+            DispatchQueue.main.async {
+                self.imageView.image = image
             }
-        }
+        }.resume()
     }
 }

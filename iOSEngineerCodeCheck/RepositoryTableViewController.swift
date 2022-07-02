@@ -13,7 +13,7 @@ class RepositoryTableViewController: UITableViewController {
     //MARK: Properties
     @IBOutlet private weak var searchBar: UISearchBar!
 
-    var repositories: [[String: Any]]=[]
+    var repositories: [Repository]=[]
     var task: URLSessionTask?
     var word: String!
     var url: String!
@@ -35,7 +35,7 @@ class RepositoryTableViewController: UITableViewController {
 }
 
 //MARK: UISearchBarDeleagate
-extension RepositoryTableViewController: UISearchBarDelegate {    
+extension RepositoryTableViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         task?.cancel()
     }
@@ -45,12 +45,11 @@ extension RepositoryTableViewController: UISearchBarDelegate {
         if word.count != 0 {
             url = "https://api.github.com/search/repositories?q=\(word!)"
             task = URLSession.shared.dataTask(with: URL(string: url)!) { (data, res, err) in
-                if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-                    if let items = obj["items"] as? [[String: Any]] {
-                    self.repositories = items
-                        DispatchQueue.main.async {
-                            self.tableView.reloadData()
-                        }
+                guard let data = data else { return }
+                if let obj = try? JSONDecoder().decode(RepositoryList.self, from: data) {
+                    self.repositories = obj.items
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
                     }
                 }
             }
@@ -68,8 +67,8 @@ extension RepositoryTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         let repositories = repositories[indexPath.row]
-        cell.textLabel?.text = repositories["full_name"] as? String ?? ""
-        cell.detailTextLabel?.text = repositories["language"] as? String ?? ""
+        cell.textLabel?.text = repositories.fullName
+        cell.detailTextLabel?.text = repositories.language
         cell.tag = indexPath.row
         return cell
     }
