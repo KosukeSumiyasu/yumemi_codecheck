@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RepositoryDetailViewController: UIViewController {
+final class RepositoryDetailViewController: UIViewController {
 
     //MARK: Properties
     @IBOutlet private weak var imageView: UIImageView!
@@ -24,31 +24,33 @@ class RepositoryDetailViewController: UIViewController {
     //MARK: ViewCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        let repositories = vc1.repositories[vc1.index]
-        languageLabel.text = "Written in \(repositories["language"] as? String ?? "")"
-        starsLabel.text = "\(repositories["stargazers_count"] as? Int ?? 0) stars"
-        watchersLabel.text = "\(repositories["wachers_count"] as? Int ?? 0) watchers"
-        forksLabel.text = "\(repositories["forks_count"] as? Int ?? 0) forks"
-        issuesLabel.text = "\(repositories["open_issues_count"] as? Int ?? 0) open issues"
+        setupLayout()
         getImage()
-
     }
 }
 
 //MARK: Private functions
 extension RepositoryDetailViewController {
+    private func setupLayout() {
+        let repository = vc1.repositories[vc1.index]
+        languageLabel.text = "Written in \(repository.language)"
+        starsLabel.text = "\(repository.starsCount.description) stars"
+        watchersLabel.text = "\(repository.watchersCount.description) watchers"
+        forksLabel.text = "\(repository.forksCount.description) stars"
+        issuesLabel.text = "\(repository.issuesCount.description) open issues"
+    }
+
     private func getImage(){
-        let repositories = vc1.repositories[vc1.index]
-        titleLabel.text = repositories["full_name"] as? String
-        if let owner = repositories["owner"] as? [String: Any] {
-            if let imageURL = owner["avatar_url"] as? String {
-                URLSession.shared.dataTask(with: URL(string: imageURL)!) { (data, response, error) in
-                    let image = UIImage(data: data!)!
-                    DispatchQueue.main.async {
-                        self.imageView.image = image
-                    }
-                }.resume()
+        let repository = vc1.repositories[vc1.index]
+        titleLabel.text = repository.fullName
+        let owner = repository.owner
+        guard let imageURL = URL(string: owner.imageUrl) else { return }
+        URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
+            guard let data = data else { return }
+            let image = UIImage(data: data)
+            DispatchQueue.main.async {
+                self.imageView.image = image
             }
-        }
+        }.resume()
     }
 }
