@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RepositoryDetailViewController: UIViewController {
+final class RepositoryDetailViewController: UIViewController {
 
     //MARK: Properties
     @IBOutlet private weak var imageView: UIImageView!
@@ -24,22 +24,26 @@ class RepositoryDetailViewController: UIViewController {
     //MARK: ViewCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        let repositories = vc1.repositories[vc1.index]
-        languageLabel.text = repositories.language
-        starsLabel.text = repositories.starsCount.description
-        watchersLabel.text = repositories.watchersCount.description
-        forksLabel.text = repositories.forksCount.description
-        issuesLabel.text = repositories.issuesCount.description
+        setupLayout()
         getImage()
     }
 }
 
 //MARK: Private functions
 extension RepositoryDetailViewController {
+    private func setupLayout() {
+        let repository = vc1.repositories[vc1.index]
+        languageLabel.text = repository.language
+        starsLabel.text = repository.starsCount.description
+        watchersLabel.text = repository.watchersCount.description
+        forksLabel.text = repository.forksCount.description
+        issuesLabel.text = repository.issuesCount.description
+    }
+
     private func getImage(){
-        let repositories = vc1.repositories[vc1.index]
-        titleLabel.text = repositories.fullName
-        let owner = repositories.owner
+        let repository = vc1.repositories[vc1.index]
+        titleLabel.text = repository.fullName
+        let owner = repository.owner
         guard let imageURL = URL(string: owner.imageUrl) else { return }
         URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
             guard let data = data else { return }
