@@ -22,7 +22,6 @@ class RepositoryTableViewController: UITableViewController {
     //MARK: ViewCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchBar.text = "GitHubのリポジトリを検索できるよー"
         searchBar.delegate = self
     }
 
@@ -36,12 +35,7 @@ class RepositoryTableViewController: UITableViewController {
 }
 
 //MARK: UISearchBarDeleagate
-extension RepositoryTableViewController: UISearchBarDelegate {
-    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        searchBar.text = ""
-        return true
-    }
-    
+extension RepositoryTableViewController: UISearchBarDelegate {    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         task?.cancel()
     }
