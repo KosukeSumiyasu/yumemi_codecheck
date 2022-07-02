@@ -33,11 +33,11 @@ final class RepositoryDetailViewController: UIViewController {
 extension RepositoryDetailViewController {
     private func setupLayout() {
         let repository = vc1.repositories[vc1.index]
-        languageLabel.text = repository.language
-        starsLabel.text = repository.starsCount.description
-        watchersLabel.text = repository.watchersCount.description
-        forksLabel.text = repository.forksCount.description
-        issuesLabel.text = repository.issuesCount.description
+        languageLabel.text = "Written in \(repository.language)"
+        starsLabel.text = "\(repository.starsCount.description) stars"
+        watchersLabel.text = "\(repository.watchersCount.description) watchers"
+        forksLabel.text = "\(repository.forksCount.description) stars"
+        issuesLabel.text = "\(repository.issuesCount.description) open issues"
     }
 
     private func getImage(){
